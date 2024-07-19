@@ -1,4 +1,5 @@
 import praw 
+from database.db_operations import insert_post
 
 reddit = praw.Reddit(
     client_id="jY-Juldz8QjmQjKLg2oNBg",
@@ -12,5 +13,7 @@ subreddit = reddit.subreddit('subreddit_name')
 
 top_posts = subreddit.top(limit=10)
 
-
+for post in top_posts: 
+    post_data = (post.id, post.title, post.score, post.url)
+    insert_post = post_data 
 
