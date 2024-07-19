@@ -9,7 +9,7 @@ reddit = praw.Reddit(
     username="Pitiful-Code6160"
 )
 
-subreddit = reddit.subreddit('subreddit_name')
+subreddit = reddit.subreddit('Cornell')
 
 top_posts = subreddit.top(limit=10)
 
