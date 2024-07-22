@@ -9,6 +9,8 @@ reddit = praw.Reddit(
     username="Pitiful-Code6160"
 )
 
+reddit.read_only = True
+
 subreddit = reddit.subreddit('Cornell')
 
 top_posts = subreddit.top(limit=10)

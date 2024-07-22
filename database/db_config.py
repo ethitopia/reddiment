@@ -8,14 +8,16 @@ def get_db_connection():
     try:
         # Set up your database connection parameters
         connection = psycopg2.connect(
-            dbname='your_database_name',
-            user='your_database_user',
-            password='your_database_password',
-            host='your_database_host',
-            port='your_database_port'  # Default is usually 5432
+            dbname='db_name',
+            user='db_user',
+            password='db_pass',
+            host='db_host',
+            port='5432' 
         )
         print("Database connection established")
         return connection
+    except psycopg2.OperationalError as e:
+        print("Operational error while connecting to the database:", e)
     except Exception as e:
         print("Error connecting to the database:", e)
-        return None
+    return None
