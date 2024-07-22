@@ -2,8 +2,9 @@ import praw
 import argparse
 import parser
 from database.db_operations import insert_post
+from .bridge import access_subreddit
 
-reddit = praw.Reddit(
+"""reddit = praw.Reddit(
     client_id="jY-Juldz8QjmQjKLg2oNBg",
     client_secret="4ZJO8wfWGG4K6KzwLpWXBqYPYntmog",
     password="19611230",
@@ -11,17 +12,31 @@ reddit = praw.Reddit(
     username="Pitiful-Code6160"
 )
 
-reddit.read_only = True
-
 subreddit = reddit.subreddit('Cornell')
 
 top_posts = subreddit.top(limit=10)
 
 for post in top_posts: 
     post_data = (post.id, post.title, post.score, post.url)
-    insert_post = post_data 
+    insert_post = post_data"""
 
-def main(): 
+def access_subreddit(id, secret, password, agent, username, url): 
+    
+    reddit = praw.Reddit(
+        client_id=id, 
+        client_secret=secret, 
+        password=password, 
+        user_agent=agent, 
+        username=username
+        )
+    reddit.read_only = True
+    submission = reddit.submission(url)
+    description = submission.selftext 
+    all_comments = submission.comments.list()
+    
+    return description, all_comments
+    
+if __name__ == "__main__": 
     argparse.ArgumentParser(description="Using PRAW to access subreddit submissions")
     argparse.ArgumentParser.add_argument('--id', required=True, help="Reddit Client id")
     argparse.ArgumentParser.add_argument('--secret', required=True, help="Reddit Client secret")
@@ -32,15 +47,6 @@ def main():
     
     args = parser.parse_args() 
     
-    reddit = praw.Reddit(
-        client_id=args.id,
-        client_secret=args.secret,
-        password=args.password,
-        user_agent=args.agent,
-        username=args.username
-        )
-    
-    url = args.url
-    
+    main(args.id, args.secret, args.password, args.agent, args.username, args.url)
     
     
