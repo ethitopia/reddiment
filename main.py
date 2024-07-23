@@ -23,10 +23,12 @@ def access_sub(id, secret, password, agent, username, url):
         )
     reddit.read_only = True
     submission = reddit.submission(url)
+    title = submission.title
+    id = submission.id
     description = submission.selftext 
     all_comments = submission.comments.body.list()
     
-    return description, all_comments
+    return (title, id, url, description), all_comments
 
     
 if __name__ == "__main__": 
@@ -39,21 +41,25 @@ if __name__ == "__main__":
     argparse.ArgumentParser.add_argument('--url', required=True, help="submission url")
     args = parser.parse_args() 
     
-    description, all_comments = access_sub(args.id, args.secret, args.password, args.agent, args.username, args.url)
+    (title, post_id, url, description), all_comments = access_sub(args.id, args.secret, args.password, args.agent, args.username, args.url)
     
-    reddit_sub = {
-        
-    }
+    selftext_sentiment = get_sentiment(description)
+    selftext_emotion = get_emotions(description)
+    reddit_sub = (title, post_id, url, description, selftext_sentiment, selftext_emotion
+    )
     
     conn = get_db_connection() 
-    insert_post(conn, )
     
+    insert_post(conn, reddit_sub)
     
-    
-    
-    get_emotions(description)
     for comment in all_comments: 
-        get_emotions(comment)
+        comment_body = comment.body if hasattr(comment, 'body') else ''
+        comment_emotions = get_emotions(comment_body)
+        comment_sentiment = get_sentiment(comment_body)
+        sub_comment = (comment.id, comment.link_id, comment_body, comment.score, comment_sentiment, comment_emotions)
+        insert_comment(conn, sub_comment)
+        
+
         
     
     

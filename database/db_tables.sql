@@ -5,8 +5,6 @@ CREATE TABLE posts (
     selftext TEXT,
     score INT,
     url TEXT,
-    title_sentiment REAL,
-    title_emotion TEXT,
     selftext_sentiment REAL,
     selftext_emotion TEXT
 );
