@@ -6,12 +6,11 @@ def get_db_connection():
     This function creates and returns a connection to the PostgreSQL database.
     """
     try:
-        # Set up your database connection parameters
+        # for now, db is locahost 
         connection = psycopg2.connect(
-            dbname='db_name',
-            user='db_user',
-            password='db_pass',
-            host='db_host',
+            host='localhost',
+            dbname='mae',
+            user='mae',
             port='5432' 
         )
         print("Database connection established")

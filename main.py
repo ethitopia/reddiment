@@ -1,7 +1,12 @@
 import praw 
 import argparse
 import parser
-from database.db_operations import insert_post
+from .process import get_emotions, get_sentiment
+from database.db_operations import insert_post, insert_comment
+from database.db_config import get_db_connection
+
+
+emotion_accumulation = {} 
 
 
 def access_sub(id, secret, password, agent, username, url): 
@@ -22,6 +27,7 @@ def access_sub(id, secret, password, agent, username, url):
     all_comments = submission.comments.body.list()
     
     return description, all_comments
+
     
 if __name__ == "__main__": 
     argparse.ArgumentParser(description="Using PRAW to access subreddit submissions")
@@ -31,9 +37,24 @@ if __name__ == "__main__":
     argparse.ArgumentParser.add_argument('--agent', required=True, help="Reddit user agent") #clarify? 
     argparse.ArgumentParser.add_argument('--username', required=True, help="Reddit Client username")
     argparse.ArgumentParser.add_argument('--url', required=True, help="submission url")
-    
     args = parser.parse_args() 
     
-    access_sub(args.id, args.secret, args.password, args.agent, args.username, args.url)
+    description, all_comments = access_sub(args.id, args.secret, args.password, args.agent, args.username, args.url)
+    
+    reddit_sub = {
+        
+    }
+    
+    conn = get_db_connection() 
+    insert_post(conn, )
+    
+    
+    
+    
+    get_emotions(description)
+    for comment in all_comments: 
+        get_emotions(comment)
+        
+    
     
     
