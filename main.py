@@ -6,8 +6,17 @@ from database.db_operations import insert_post, insert_comment
 from database.db_config import get_db_connection
 
 
-emotion_accumulation = {} 
-
+def get_parser(): 
+    parser = argparse.ArgumentParser(description="Using PRAW to access subreddit submissions")
+    parser.ArgumentParser.add_argument('--id', required=True, help="Reddit Client id")
+    parser.ArgumentParser.add_argument('--secret', required=True, help="Reddit Client secret")
+    parser.ArgumentParser.add_argument('--password', required=True, help="Reddit Client password")
+    parser.ArgumentParser.add_argument('--agent', required=True, help="Reddit user agent") #clarify? 
+    parser.ArgumentParser.add_argument('--username', required=True, help="Reddit Client username")
+    parser.ArgumentParser.add_argument('--url', required=True, help="submission url")
+    
+    return parser
+    
 
 def access_sub(id, secret, password, agent, username, url): 
     """
@@ -21,36 +30,28 @@ def access_sub(id, secret, password, agent, username, url):
         user_agent=agent, 
         username=username
         )
+    
     reddit.read_only = True
     submission = reddit.submission(url)
-    title = submission.title
-    id = submission.id
-    description = submission.selftext 
     all_comments = submission.comments.body.list()
     
-    return (title, id, url, description), all_comments
+    return (submission.title, submission.id, submission.url, submission.selftext), all_comments
 
     
 if __name__ == "__main__": 
-    argparse.ArgumentParser(description="Using PRAW to access subreddit submissions")
-    argparse.ArgumentParser.add_argument('--id', required=True, help="Reddit Client id")
-    argparse.ArgumentParser.add_argument('--secret', required=True, help="Reddit Client secret")
-    argparse.ArgumentParser.add_argument('--password', required=True, help="Reddit Client password")
-    argparse.ArgumentParser.add_argument('--agent', required=True, help="Reddit user agent") #clarify? 
-    argparse.ArgumentParser.add_argument('--username', required=True, help="Reddit Client username")
-    argparse.ArgumentParser.add_argument('--url', required=True, help="submission url")
-    args = parser.parse_args() 
+    parser = get_parser()
+    args = parser.parse_args()
     
     (title, post_id, url, description), all_comments = access_sub(args.id, args.secret, args.password, args.agent, args.username, args.url)
     
     selftext_sentiment = get_sentiment(description)
     selftext_emotion = get_emotions(description)
-    reddit_sub = (title, post_id, url, description, selftext_sentiment, selftext_emotion
-    )
     
     conn = get_db_connection() 
     
+    reddit_sub = (title, post_id, url, description, selftext_sentiment, selftext_emotion)
     insert_post(conn, reddit_sub)
+    
     
     for comment in all_comments: 
         comment_body = comment.body if hasattr(comment, 'body') else ''

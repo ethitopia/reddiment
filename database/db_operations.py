@@ -28,7 +28,7 @@ def insert_comment(conn, comment_data):
         try:
             cur = conn.cursor()
             cur.execute("""
-                        INSERT INTO comments (reddit_comment_id, post_id, body, comment_sentiment, comment_emotion) 
+                        INSERT INTO comments (reddit_comment_id, post_id, body, score, comment_sentiment, comment_emotion) 
                         VALUES (%s, %s, %s, %s, %s, %s) 
                         ON CONFLICT (reddit_post_id) DO NOTHING
                         """, comment_data)
