@@ -1,4 +1,3 @@
-from db_config import get_db_connection
 
 def insert_post(conn, post_data):
     """

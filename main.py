@@ -1,19 +1,18 @@
 import praw 
 import argparse
-import parser
-from .process import get_emotions, get_sentiment
+from process import get_emotions, get_sentiment
 from database.db_operations import insert_post, insert_comment
 from database.db_config import get_db_connection
 
 
 def get_parser(): 
     parser = argparse.ArgumentParser(description="Using PRAW to access subreddit submissions")
-    parser.ArgumentParser.add_argument('--id', required=True, help="Reddit Client id")
-    parser.ArgumentParser.add_argument('--secret', required=True, help="Reddit Client secret")
-    parser.ArgumentParser.add_argument('--password', required=True, help="Reddit Client password")
-    parser.ArgumentParser.add_argument('--agent', required=True, help="Reddit user agent") #clarify? 
-    parser.ArgumentParser.add_argument('--username', required=True, help="Reddit Client username")
-    parser.ArgumentParser.add_argument('--url', required=True, help="submission url")
+    parser.add_argument('--id', required=True, help="Reddit Client id")
+    parser.add_argument('--secret', required=True, help="Reddit Client secret")
+    parser.add_argument('--password', required=True, help="Reddit Client password")
+    #parser.add_argument('--agent', required=True, help="Reddit user agent") #clarify? 
+    parser.add_argument('--username', required=True, help="Reddit Client username")
+    parser.add_argument('--url', required=True, help="submission url")
     
     return parser
     
@@ -24,11 +23,11 @@ def access_sub(id, secret, password, agent, username, url):
     subreddit submission.
     """
     reddit = praw.Reddit(
-        client_id=id, 
-        client_secret=secret, 
-        password=password, 
-        user_agent=agent, 
-        username=username
+        client_id=id, #Y-Juldz8QjmQjKLg2oNBg
+        client_secret=secret, #4ZJO8wfWGG4K6KzwLpWXBqYPYntmog
+        password=password, #19611230
+        user_agent=agent,
+        username=username #'Pitiful-Code6160'
         )
     
     reddit.read_only = True
@@ -41,8 +40,9 @@ def access_sub(id, secret, password, agent, username, url):
 if __name__ == "__main__": 
     parser = get_parser()
     args = parser.parse_args()
+    agent = 'desktop:myRedditApp:v1.0.0 (by /u/Pitiful-Code6160)'
     
-    (title, post_id, url, description), all_comments = access_sub(args.id, args.secret, args.password, args.agent, args.username, args.url)
+    (title, post_id, url, description), all_comments = access_sub(args.id, args.secret, args.password, agent, args.username, args.url)
     
     selftext_sentiment = get_sentiment(description)
     selftext_emotion = get_emotions(description)
@@ -60,6 +60,7 @@ if __name__ == "__main__":
         sub_comment = (comment.id, comment.link_id, comment_body, comment.score, comment_sentiment, comment_emotions)
         insert_comment(conn, sub_comment)
         
+    print("completed test run")
 
         
     
