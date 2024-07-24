@@ -1,21 +1,22 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
+
 function redditFetcher() {
  const [url, setUrl] = useState('');
  const [data, setData] = useState(null);
  const [loading, setLoading] = useState(false);
-}
 
-const fetchData = async () => {
- setLoading(true);
- try {
-  const response = await axios.post('http://localhost:5000/fetch', { url });
-  setData(response.data);
- } catch (error) {
-  console.error('Error fetching data', error);
- } finally {
-  setLoading(false);
+ const fetchData = async () => {
+  setLoading(true);
+  try {
+   const response = await axios.post('http://localhost:5432/fetch', { url });
+   setData(response.data);
+  } catch (error) {
+   console.error('Error fetching data', error);
+  } finally {
+   setLoading(false);
+  }
  }
 };
 
@@ -32,3 +33,5 @@ return (
   </div>}
  </div>
 );
+
+export default redditFetcher;
