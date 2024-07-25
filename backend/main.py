@@ -3,6 +3,10 @@ import argparse
 from process import get_emotions, get_sentiment
 from database.db_operations import insert_post, insert_comment
 from database.db_config import get_db_connection
+from flask import Flask, request, jsonify
+
+
+app = Flask(__name__)
 
 
 def get_parser(): 
@@ -13,9 +17,31 @@ def get_parser():
     #parser.add_argument('--agent', required=True, help="Reddit user agent") #clarify? 
     parser.add_argument('--username', required=True, help="Reddit Client username")
     parser.add_argument('--url', required=True, help="submission url")
-    
     return parser
+
+
+@app.route('/fetch', methods=['POST'])
+def fetch_data(): 
+    args = request.json
+    title, post_id, url, description, all_comments = access_sub(args['id'], args['secret'], args['password'],
+        'desktop:myRedditApp:v1.0.0 (by /u/Pitiful-Code6160)', args['username'], args['url'])
     
+    selftext_sentiment = get_sentiment(description)
+    selftext_emotion = get_emotions(description)
+    
+    conn = get_db_connection()
+    reddit_sub = (title, post_id, url, description, selftext_sentiment, selftext_emotion)
+    insert_post(conn, reddit_sub)
+    
+    for comment in all_comments:
+        comment_body = comment.body if hasattr(comment, 'body') else ''
+        comment_emotions = get_emotions(comment_body)
+        comment_sentiment = get_sentiment(comment_body)
+        sub_comment = (comment.id, comment.link_id, comment_body, comment.score, comment_sentiment, comment_emotions)
+        insert_comment(conn, sub_comment)
+        
+    return jsonify({"message": "Data fetched and stored successfully"}), 200
+
 
 def access_sub(id, secret, password, agent, username, url): 
     """
@@ -40,26 +66,7 @@ def access_sub(id, secret, password, agent, username, url):
 if __name__ == "__main__": 
     parser = get_parser()
     args = parser.parse_args()
-    agent = 'desktop:myRedditApp:v1.0.0 (by /u/Pitiful-Code6160)'
-    
-    (title, post_id, url, description), all_comments = access_sub(args.id, args.secret, args.password, agent, args.username, args.url)
-    
-    selftext_sentiment = get_sentiment(description)
-    selftext_emotion = get_emotions(description)
-    
-    conn = get_db_connection() 
-    
-    reddit_sub = (title, post_id, url, description, selftext_sentiment, selftext_emotion)
-    insert_post(conn, reddit_sub)
-    
-    
-    for comment in all_comments: 
-        comment_body = comment.body if hasattr(comment, 'body') else ''
-        comment_emotions = get_emotions(comment_body)
-        comment_sentiment = get_sentiment(comment_body)
-        sub_comment = (comment.id, comment.link_id, comment_body, comment.score, comment_sentiment, comment_emotions)
-        insert_comment(conn, sub_comment)
-        
+    app.run(debug=True)
     print("completed test run")
 
         
