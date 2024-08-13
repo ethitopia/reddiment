@@ -1,7 +1,25 @@
 
+
+def create_sub(conn): 
+    """
+    Creates a database for each subreddit
+    
+    Args: 
+        conn (psycopg2.connect): database connection 
+    """
+    cur = conn.curser() 
+    cur.execute('DROP TABLE IF EXISTS subreddit')
+    cur.execute('CREATE TABLE subreddit (id serial PRIMARY KEY)'
+    )
+
+
 def insert_post(conn, post_data):
     """
-    Inserts a post into the database.
+    Inserts a post into a predefined subreddit database 
+    
+    Args: 
+        conn (psycopg2.connect): database connection 
+        post_data (): scraped subreddit post data 
     """
     if conn:
         try:
@@ -21,7 +39,11 @@ def insert_post(conn, post_data):
         
 def insert_comment(conn, comment_data):
     """
-    Inserts a post into the database.
+    Inserts a comment into the database.
+    
+    Args: 
+        conn (psycoopg2.connect): database connection 
+        comment_data (): scraped comment data 
     """
     if conn:
         try:

@@ -1,6 +1,7 @@
 import psycopg2
 from psycopg2.extras import DictCursor
 
+
 def get_db_connection():
     """
     This function creates and returns a connection to the PostgreSQL database.
@@ -20,3 +21,6 @@ def get_db_connection():
     except Exception as e:
         print("Error connecting to the database:", e)
     return None
+
+
+
