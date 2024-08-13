@@ -16,7 +16,6 @@ def get_emotions(comment):
     filtered_text = ' '.join(filtered_words)
     emotion = nrclex.NRCLex(filtered_text)
     emotion_score = emotion.raw_emotion_scores 
-    
     emotion_score.pop('positive', None)
     emotion_score.pop('negative', None)
     
@@ -27,7 +26,6 @@ def get_sentiment(comment):
  
     sia = SentimentIntensityAnalyzer()
     scores = sia.polarity_scores(list[0])
-    
     return scores 
     
     

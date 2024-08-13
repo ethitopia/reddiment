@@ -1,9 +1,10 @@
 import praw 
 import argparse
+import logging 
 from process import get_emotions, get_sentiment
 from database.db_operations import insert_post, insert_comment
 from database.db_config import get_db_connection
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, abort 
 
 
 app = Flask(__name__)
@@ -22,25 +23,30 @@ def get_parser():
 
 @app.route('/fetch', methods=['POST'])
 def fetch_data(): 
-    args = request.json
-    title, post_id, url, description, all_comments = access_sub(args['id'], args['secret'], args['password'],
-        'desktop:myRedditApp:v1.0.0 (by /u/Pitiful-Code6160)', args['username'], args['url'])
-    
-    selftext_sentiment = get_sentiment(description)
-    selftext_emotion = get_emotions(description)
-    
-    conn = get_db_connection()
-    reddit_sub = (title, post_id, url, description, selftext_sentiment, selftext_emotion)
-    insert_post(conn, reddit_sub)
-    
-    for comment in all_comments:
-        comment_body = comment.body if hasattr(comment, 'body') else ''
-        comment_emotions = get_emotions(comment_body)
-        comment_sentiment = get_sentiment(comment_body)
-        sub_comment = (comment.id, comment.link_id, comment_body, comment.score, comment_sentiment, comment_emotions)
-        insert_comment(conn, sub_comment)
+    try:
+        args = request.json
+        title, post_id, url, description, all_comments = access_sub(args['id'], args['secret'], args['password'],
+            'desktop:myRedditApp:v1.0.0 (by /u/Pitiful-Code6160)', args['username'], args['url'])
         
-    return jsonify({"message": "Data fetched and stored successfully"}), 200
+        selftext_sentiment = get_sentiment(description)
+        selftext_emotion = get_emotions(description)
+        
+        conn = get_db_connection()
+        reddit_sub = (title, post_id, url, description, selftext_sentiment, selftext_emotion)
+        insert_post(conn, reddit_sub)
+        
+        for comment in all_comments:
+            comment_body = comment.body if hasattr(comment, 'body') else ''
+            comment_emotions = get_emotions(comment_body)
+            comment_sentiment = get_sentiment(comment_body)
+            sub_comment = (comment.id, comment.link_id, comment_body, comment.score, comment_sentiment, comment_emotions)
+            insert_comment(conn, sub_comment)
+            
+        return jsonify({"message": "Data fetched and stored successfully"}), 200
+    except Exception as e: 
+        logging.error(f'Exception as {e}')
+        abort(500, description="An error occurred while fetching data.") 
+        
 
 
 def access_sub(id, secret, password, agent, username, url): 

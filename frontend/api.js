@@ -6,6 +6,7 @@ function redditFetcher() {
  const [url, setUrl] = useState('');
  const [data, setData] = useState(null);
  const [loading, setLoading] = useState(false);
+ const [error, setError] = useState("");
 
  const fetchData = async () => {
   setLoading(true);
@@ -22,16 +23,26 @@ function redditFetcher() {
 
 return (
  <div>
-  <input type="text" value={url} onChange={(e) => setUrl(e.target.value)} placeholder="Enter Reddit URL" />
-  <button onClick={fetchData} disabled={loading}>Analyze</button>
+  <input type="text"
+   value={url}
+   onChange={(e) => setUrl(e.target.value)}
+   placeholder="Enter Reddit URL"
+  />
+  <button onClick={fetchData} disabled={loading}>
+   Analyze
+  </button>
   {loading && <p>Loading...</p>}
-  {data && <div>
-   <h3>Results:</h3>
-   <p>Title: {data.title}</p>
-   <p>Sentiments: {JSON.stringify(data.sentiments)}</p>
-   <p>Emotions: {JSON.stringify(data.emotions)}</p>
-  </div>}
+  {error && <p style={{ color: 'red ' }}>{error}</p>}
+  {data && (
+   <div>
+    <h3>Results:</h3>
+    <p>Title: {data.title}</p>
+    <p>Sentiments: {JSON.stringify(data.sentiments)}</p>
+    <p>Emotions: {JSON.stringify(data.emotions)}</p>
+   </div>
+  )}
  </div>
 );
+
 
 export default redditFetcher;

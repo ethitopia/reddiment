@@ -9,9 +9,9 @@ def get_db_connection():
         # for now, db is locahost 
         connection = psycopg2.connect(
             host='localhost',
-            dbname='mae',
-            user='mae',
-            port='5432' 
+            dbname='flask_db',
+            user=['DB_USERNAME'],
+            port=['DB_PASSWORD'] 
         )
         print("Database connection established")
         return connection
