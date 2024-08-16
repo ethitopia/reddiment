@@ -1,7 +1,7 @@
-import praw 
 import argparse
 import logging 
 from process import get_emotions, get_sentiment
+from api.api import access_sub 
 from database.db_operations import insert_post, insert_comment
 from database.db_config import get_db_connection
 from flask import Flask, request, jsonify, abort 
@@ -10,23 +10,11 @@ from flask import Flask, request, jsonify, abort
 app = Flask(__name__)
 
 
-def get_parser(): 
-    parser = argparse.ArgumentParser(description="Using PRAW to access subreddit submissions")
-    parser.add_argument('--id', required=True, help="Reddit Client id")
-    parser.add_argument('--secret', required=True, help="Reddit Client secret")
-    parser.add_argument('--password', required=True, help="Reddit Client password")
-    #parser.add_argument('--agent', required=True, help="Reddit user agent") #clarify? 
-    parser.add_argument('--username', required=True, help="Reddit Client username")
-    parser.add_argument('--url', required=True, help="submission url")
-    return parser
-
-
 @app.route('/fetch', methods=['POST'])
 def fetch_data(): 
     try:
         args = request.json
-        title, post_id, url, description, all_comments = access_sub(args['id'], args['secret'], args['password'],
-            'desktop:myRedditApp:v1.0.0 (by /u/Pitiful-Code6160)', args['username'], args['url'])
+        title, post_id, url, description, all_comments = access_sub(args[url])
         
         selftext_sentiment = get_sentiment(description)
         selftext_emotion = get_emotions(description)
@@ -47,31 +35,15 @@ def fetch_data():
         logging.error(f'Exception as {e}')
         abort(500, description="An error occurred while fetching data.") 
         
-
-
-def access_sub(id, secret, password, agent, username, url): 
+        
+def process_comment_data(comment):
     """
-    given id, secret, pass, user_agent, username, url, accesses the url's 
-    subreddit submission.
+    Ensures comment data is sufficient for reddiment. 
     """
-    reddit = praw.Reddit(
-        client_id=id, #Y-Juldz8QjmQjKLg2oNBg
-        client_secret=secret, #4ZJO8wfWGG4K6KzwLpWXBqYPYntmog
-        password=password, #19611230
-        user_agent=agent,
-        username=username #'Pitiful-Code6160'
-        )
-    
-    reddit.read_only = True
-    submission = reddit.submission(url)
-    all_comments = submission.comments.body.list()
-    
-    return (submission.title, submission.id, submission.url, submission.selftext), all_comments
-
+    comment_body = comment.body if hasattr(comment, 'body') else ''
+    return (comment.id, comment.link_id, comment_body, comment.score, get_sentiment(comment_body), get_emotions(comment_body))
     
 if __name__ == "__main__": 
-    parser = get_parser()
-    args = parser.parse_args()
     app.run(debug=True)
     print("completed test run")
 

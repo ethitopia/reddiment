@@ -17,9 +17,8 @@ def get_emotions(comment):
         
     Returns: 
         emotion_score (dict): of associated scores with each value  
-    
     """
- 
+    
     tokens = word_tokenize(comment)
     filtered_words = [c for c in tokens if c not in stopwords.words('english')] # remove stopwords 
     
@@ -37,11 +36,14 @@ def get_sentiment(comment):
     Returns a sentiment score for each string comment 
     
     Args: 
-        comment (string): a string of subreddit comment 
+        comment (string): a string of subreddit comment
+        
+    Returns: 
+        a dictionary of sentiment scores 
     """
  
     sia = SentimentIntensityAnalyzer()
-    scores = sia.polarity_scores(list[0])
+    scores = sia.polarity_scores(comment)
     return scores 
     
     
