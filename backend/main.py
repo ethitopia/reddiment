@@ -11,7 +11,10 @@ app = Flask(__name__)
 
 
 @app.route('/fetch', methods=['POST'])
-def fetch_data(): 
+def fetch_data():
+    """ 
+    Fetches subreddit data and stores in postgres db. 
+    """ 
     try:
         args = request.json
         title, post_id, url, description, all_comments = access_sub(args[url])
