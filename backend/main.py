@@ -1,6 +1,5 @@
-import argparse
 import logging 
-from process import get_emotions, get_sentiment
+from backend.sentiment.process import get_emotions, get_sentiment
 from api.api import access_sub 
 from database.db_operations import insert_post, insert_comment
 from database.db_config import get_db_connection
@@ -8,8 +7,7 @@ from flask import Flask, request, jsonify, abort
 
 
 app = Flask(__name__)
-
-
+    
 @app.route('/fetch', methods=['POST'])
 def fetch_data():
     """ 
@@ -45,6 +43,7 @@ def process_comment_data(comment):
     """
     comment_body = comment.body if hasattr(comment, 'body') else ''
     return (comment.id, comment.link_id, comment_body, comment.score, get_sentiment(comment_body), get_emotions(comment_body))
+    
     
 if __name__ == "__main__": 
     app.run(debug=True)
