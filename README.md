@@ -1,28 +1,45 @@
 # Reddiment
 
-Reddiment is a Chrome extension currently under development, designed to analyze and estimate the sentiment and emotions evoked by submissions in specific subreddits. This tool aims to provide users with an 'educated guess' about the emotional content of posts, helping them navigate toward content that matches their emotional preferences and avoiding potentially distressing material.
+Reddiment is a Chrome extension currently under development, designed to analyze and estimate the sentiment and emotions evoked by submissions in specific subreddits. This tool aims to provide users with an 'educated guess' about the emotional content of posts, helping them navigate toward content that matches their emotional preferences and avoid potentially distressing material.
 
-## Key Features:
+## Table of Contents
+1. [Introduction](#introduction)
+2. [Key Features](#key-features)
+3. [Planned Enhancements](#planned-enhancements)
+4. [Motivation](#motivation)
+5. [Technical Stack](#technical-stack)
+6. [Installation](#installation)
+7. [License](#license)
 
-Sentiment Analysis: Leverages advanced Natural Language Processing (NLP) techniques to assess the sentiment and emotional undertones of subreddit posts.
-Integration with Reddit: Utilizes the PRAW (Python Reddit API Wrapper) to fetch posts seamlessly from specified subreddits.
-Emotion Detection: Employs the NLTK (Natural Language Toolkit) and NRC Lexicon (NRCLex) packages to detect and analyze a wide range of emotions conveyed in the text.
+## Introduction
 
-## Planned Enhancements:
+Reddiment offers a new way to experience Reddit by providing sentiment and emotion analysis on subreddit submissions. By utilizing advanced NLP techniques, Reddiment helps users better understand the emotional undertones of posts.
 
-Backend Framework: Aims to incorporate the Flask framework for handling backend operations, enhancing the scalability and responsiveness of the extension.
-Database Support: Currently integrating PostgreSQL databases to efficiently manage and query sentiment data.
+## Key Features
 
-## Motivation:
+- **Sentiment Analysis**: Leverages advanced Natural Language Processing (NLP) techniques to assess the sentiment and emotional undertones of subreddit posts.
+- **Integration with Reddit**: Utilizes the PRAW (Python Reddit API Wrapper) to fetch posts seamlessly from specified subreddits.
+- **Emotion Detection**: Employs the NLTK (Natural Language Toolkit) and NRC Lexicon (NRCLex) packages to detect and analyze a wide range of emotions conveyed in the text.
+
+## Planned Enhancements
+
+- **Backend Framework**: Aims to incorporate the Flask framework for handling backend operations, enhancing the scalability and responsiveness of the extension.
+- **Database Support**: Currently integrating PostgreSQL databases to efficiently manage and query sentiment data.
+
+## Motivation
 
 The inspiration for Reddiment stems from the varied emotional impact of Reddit posts, which can range from highly positive and informative to negative and stressful. By providing users with insights into the emotional content of posts, Reddiment aims to enhance the Reddit browsing experience, allowing users to select content that best suits their current emotional state.
 
-## Technical Stack 
+## Technical Stack
 
-NLTK, PRAW, NRCLex, Flask, PostgreSQL
+- **Languages and Libraries**: NLTK, PRAW, NRCLex
+- **Backend Framework**: Flask
+- **Database**: PostgreSQL
 
-# Installation: 
+## Installation
 
-# License
+(TBD - Add installation instructions here when ready.)
 
-Free to share! 
+## License
+
+This project is free to share and use!
