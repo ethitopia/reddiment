@@ -1,23 +1,26 @@
 import logging 
-from backend.sentiment.process import get_emotions, get_sentiment
-from api.api import access_sub 
-from database.db_operations import insert_post, insert_comment
-from database.db_config import get_db_connection
-from flask import Flask, request, jsonify, abort 
-from fastapi import FastAPI
+from .sentiment.process import get_emotions, get_sentiment
+from .api.api import access_sub 
+from .database.db_operations import insert_post, insert_comment
+from .database.db_config import get_db_connection
+from fastapi import FastAPI, HTTPException
 import uvicorn
 
 
 app = FastAPI()
+
+
+class redditScraper(): 
+    url : str 
+    
     
 @app.get("/")
-def fetch_data():
+async def fetch_data(request):
     """ 
     Fetches subreddit data and stores in postgres db. 
     """ 
     try:
-        args = request.json
-        title, post_id, url, description, all_comments = access_sub(args[url])
+        title, post_id, url, description, all_comments = access_sub(request.url)
         
         selftext_sentiment = get_sentiment(description)
         selftext_emotion = get_emotions(description)
@@ -33,10 +36,10 @@ def fetch_data():
             sub_comment = (comment.id, comment.link_id, comment_body, comment.score, comment_sentiment, comment_emotions)
             insert_comment(conn, sub_comment) #inserts comment into comment db 
             
-        return jsonify({"message": "Data fetched and stored successfully"}), 200
+        return {"message": "Data fetched and stored successfully"}
     except Exception as e: 
         logging.error(f'Exception as {e}')
-        abort(500, description="An error occurred while fetching data.") 
+        raise HTTPException(500, description="An error occurred while fetching data.") 
         
         
 def process_comment_data(comment):
@@ -48,8 +51,7 @@ def process_comment_data(comment):
     
     
 if __name__ == "__main__": 
-    app.run(debug=True)
-    print("completed test run")
+    uvicorn.run("main:app", host="127.0.0.1", port=8000, log_level="info", reload=True)
 
         
     
