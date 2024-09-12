@@ -4,11 +4,13 @@ from api.api import access_sub
 from database.db_operations import insert_post, insert_comment
 from database.db_config import get_db_connection
 from flask import Flask, request, jsonify, abort 
+from fastapi import FastAPI
+import uvicorn
 
 
-app = Flask(__name__)
+app = FastAPI()
     
-@app.route('/fetch', methods=['POST'])
+@app.get("/")
 def fetch_data():
     """ 
     Fetches subreddit data and stores in postgres db. 
@@ -29,7 +31,7 @@ def fetch_data():
             comment_emotions = get_emotions(comment_body)
             comment_sentiment = get_sentiment(comment_body)
             sub_comment = (comment.id, comment.link_id, comment_body, comment.score, comment_sentiment, comment_emotions)
-            insert_comment(conn, sub_comment)
+            insert_comment(conn, sub_comment) #inserts comment into comment db 
             
         return jsonify({"message": "Data fetched and stored successfully"}), 200
     except Exception as e: 

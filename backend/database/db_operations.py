@@ -27,7 +27,7 @@ def insert_post(conn, post_data):
     """
     cur = conn.cursor()
     try:
-        cur.execute("""INSERT INTO posts (reddit_post_id, title, url, selftext_sentiment, selftext_emotion) VALUES (%s, %s, %s, %s, %s, %s) ON CONFLICT (reddit_post_id) DO NOTHING""", post_data)
+        cur.execute("""INSERT INTO posts (reddit_post_id, title, url, selftext_sentiment, selftext_emotion) VALUES (%s, %s, %s, %s, %s) ON CONFLICT (reddit_post_id) DO NOTHING""", post_data)
         conn.commit()
         print("Post inserted successfully")
     except Exception as e:
