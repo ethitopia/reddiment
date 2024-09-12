@@ -23,8 +23,8 @@ Reddiment offers a new way to experience Reddit by providing sentiment and emoti
 
 ## Planned Enhancements
 
-- **Backend Framework**: Aims to incorporate the Flask framework for handling backend operations, enhancing the scalability and responsiveness of the extension.
-- **Database Support**: Currently integrating PostgreSQL databases to efficiently manage and query sentiment data.
+- **Backend Framework**: Integrating Fast-API framework for handling backend operations, enhancing the scalability and responsiveness of the extension.
+- **Database Support**: Utilizes PostgreSQL databases to efficiently manage and query sentiment data.
 
 ## Motivation
 
@@ -33,7 +33,7 @@ The inspiration for Reddiment stems from the varied emotional impact of Reddit p
 ## Technical Stack
 
 - **Languages and Libraries**: NLTK, PRAW, NRCLex
-- **Backend Framework**: Flask
+- **Backend Framework**: Fast-API
 - **Database**: PostgreSQL
 
 ## Installation

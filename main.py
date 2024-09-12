@@ -4,18 +4,19 @@ from .api.api import access_sub
 from .database.db_operations import insert_post, insert_comment
 from .database.db_config import get_db_connection
 from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel
 import uvicorn
 
 
 app = FastAPI()
 
 
-class redditScraper(): 
+class redditClient(BaseModel): 
     url : str 
     
     
 @app.get("/")
-async def fetch_data(request):
+async def fetch_data(request : redditClient):
     """ 
     Fetches subreddit data and stores in postgres db. 
     """ 
