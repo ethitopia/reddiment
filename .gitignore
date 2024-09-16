@@ -1,1 +1,3 @@
-scrape.py
+api.py
+__pycache__
+.env
