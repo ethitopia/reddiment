@@ -5,11 +5,11 @@ from pydantic import BaseModel
 from dotenv import load_dotenv
 import uvicorn
 import praw
-from .auth import auth_router, get_user_refresh_token, get_reddit_instance
-from .sentiment.process import get_emotions, get_sentiment
-from .api.api import access_sub
-from .database.db_operations import insert_post, insert_comment
-from .database.db_config import get_db_connection
+from auth import auth_router, get_user_refresh_token
+from sentiment.process import get_emotions, get_sentiment
+from api.api import access_sub
+from database.db_operations import insert_post, insert_comment
+from database.db_config import get_db_connection
 
 
 load_dotenv()
@@ -19,6 +19,14 @@ app.include_router(auth_router)
 
 class RedditClient(BaseModel):
     url: str
+    
+
+def process_comment_data(comment):
+    comment_id = comment.id
+    body = comment.body
+    sentiment = get_sentiment(body)
+    emotion = get_emotions(body)
+    return (comment_id, body, sentiment, emotion)
 
 
 @app.post("/fetch-data/")

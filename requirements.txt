@@ -1,0 +1,7 @@
+fastapi
+uvicorn
+praw
+psycopg2-binary
+python-dotenv
+nltk
+nrclex

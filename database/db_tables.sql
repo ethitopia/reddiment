@@ -19,3 +19,9 @@ CREATE TABLE comments (
     comment_emotion TEXT,
     FOREIGN KEY (post_id) REFERENCES posts(id)
 );
+
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    username VARCHAR(255) UNIQUE NOT NULL,
+    refresh_token TEXT NOT NULL
+);

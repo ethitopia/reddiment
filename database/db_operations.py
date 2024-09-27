@@ -57,21 +57,19 @@ def insert_comment(conn, comment_data):
         cur.close() 
         
 
-def save_user_token(): 
-    """
-    FIXME: Function to save user token... 
-    """
-    pass 
+def insert_user(conn, username, refresh_token):
+    with conn.cursor() as cursor:
+        cursor.execute(
+            "INSERT INTO users (username, refresh_token) VALUES (%s, %s) ON CONFLICT (username) DO UPDATE SET refresh_token = EXCLUDED.refresh_token",
+            (username, refresh_token),
+        )
+        conn.commit()
 
-
-def get_user_token(): 
-    """
-    FIXME: Function to get user token from saved db... 
-    """
-    pass 
-
-
-def update_user_token(): 
-    """
-    FIXME: Function to save 
-    """
+def get_user_refresh_token(conn, username):
+    with conn.cursor() as cursor:
+        cursor.execute(
+            "SELECT refresh_token FROM users WHERE username = %s",
+            (username,),
+        )
+        result = cursor.fetchone()
+        return result[0] if result else None
