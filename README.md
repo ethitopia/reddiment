@@ -1,6 +1,6 @@
 # Reddiment
 
-Reddiment is a Chrome extension currently under development, designed to analyze and estimate the sentiment and emotions evoked by submissions in specific subreddits. This tool aims to provide users with an 'educated guess' about the emotional content of posts, helping them navigate toward content that matches their emotional preferences and avoid potentially distressing material.
+Reddiment is a Chrome extension, designed to analyze and estimate the sentiment and emotions evoked by submissions in specific subreddits. This tool aims to provide users with an 'educated guess' about the emotional content of posts, helping them navigate toward content that matches their emotional preferences and avoid potentially distressing material.
 
 ## Table of Contents
 1. [Introduction](#introduction)
